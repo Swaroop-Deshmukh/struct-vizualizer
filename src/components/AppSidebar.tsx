@@ -1,12 +1,11 @@
 import { 
-  FileText, 
-  Info, 
-  Code2, 
   Database, 
-  FileCode, 
+  Table2, 
+  Search, 
   BarChart3, 
-  BookOpen, 
-  Library 
+  FileJson, 
+  Settings,
+  Plus
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -23,16 +22,15 @@ import {
   SidebarHeader,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 
 const items = [
-  { title: "Title Page", url: "/", icon: FileText },
-  { title: "Introduction", url: "/introduction", icon: Info },
-  { title: "Tech Stack", url: "/tech-stack", icon: Code2 },
-  { title: "Data Structures & Algorithms", url: "/ds-algo", icon: Database },
-  { title: "Implementation", url: "/implementation", icon: FileCode },
-  { title: "Results", url: "/results", icon: BarChart3 },
-  { title: "Conclusion", url: "/conclusion", icon: BookOpen },
-  { title: "References", url: "/references", icon: Library },
+  { title: "Dashboard", url: "/", icon: Database },
+  { title: "Collections", url: "/collections", icon: Table2 },
+  { title: "Query", url: "/query", icon: Search },
+  { title: "Schema", url: "/schema", icon: FileJson },
+  { title: "Analytics", url: "/analytics", icon: BarChart3 },
+  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
@@ -46,12 +44,18 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border px-4 py-4">
         {state !== "collapsed" && (
-          <div className="flex items-center gap-2">
-            <Database className="h-6 w-6 text-primary" />
-            <div>
-              <h2 className="text-sm font-semibold text-sidebar-foreground">DS Project Report</h2>
-              <p className="text-xs text-muted-foreground">Data Structures & Algorithms</p>
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Database className="h-6 w-6 text-primary" />
+              <div>
+                <h2 className="text-sm font-semibold text-sidebar-foreground">DataStructure DB</h2>
+                <p className="text-xs text-muted-foreground">Local Instance</p>
+              </div>
             </div>
+            <Button size="sm" className="w-full bg-primary hover:bg-primary/90">
+              <Plus className="h-4 w-4 mr-2" />
+              New Collection
+            </Button>
           </div>
         )}
         {state === "collapsed" && (
@@ -61,7 +65,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Report Sections</SidebarGroupLabel>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
