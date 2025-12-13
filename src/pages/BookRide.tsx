@@ -18,10 +18,12 @@ import {
   Plus,
   Wallet,
   CreditCard,
-  Crosshair
+  Crosshair,
+  ArrowLeft
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import Map from "@/components/Map";
+import RideMatching from "@/components/RideMatching";
 
 const vehicleTypes = [
   { 
@@ -65,6 +67,7 @@ export default function BookRide() {
   const [selectMode, setSelectMode] = useState<"pickup" | "dropoff" | null>(null);
   const [pickupInput, setPickupInput] = useState("");
   const [dropoffInput, setDropoffInput] = useState("");
+  const [isBooking, setIsBooking] = useState(false);
 
   const handlePickupSelect = (location: Location) => {
     setPickupLocation(location);
@@ -72,7 +75,7 @@ export default function BookRide() {
     setSelectMode(null);
     toast({
       title: "Pickup location set",
-      description: location.address.substring(0, 50) + "...",
+      description: location.address.substring(0, 50) + (location.address.length > 50 ? "..." : ""),
     });
   };
 
@@ -82,7 +85,7 @@ export default function BookRide() {
     setSelectMode(null);
     toast({
       title: "Drop-off location set",
-      description: location.address.substring(0, 50) + "...",
+      description: location.address.substring(0, 50) + (location.address.length > 50 ? "..." : ""),
     });
   };
 
@@ -102,7 +105,7 @@ export default function BookRide() {
             handlePickupSelect({ lat: latitude, lng: longitude, address: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}` });
           }
         },
-        (error) => {
+        () => {
           toast({
             title: "Location error",
             description: "Could not get your current location",
@@ -114,11 +117,25 @@ export default function BookRide() {
   };
 
   const handleBookRide = () => {
+    if (!pickupLocation || !dropoffLocation) {
+      toast({
+        title: "Missing locations",
+        description: "Please select both pickup and drop-off locations",
+        variant: "destructive",
+      });
+      return;
+    }
+    setIsBooking(true);
+  };
+
+  const handleCancelBooking = () => {
+    setIsBooking(false);
+  };
+
+  const handleRideConfirmed = (ride: any) => {
     toast({
-      title: "Ride Booked!",
-      description: sharingEnabled 
-        ? "Looking for co-passengers to share your ride..." 
-        : "Finding a driver for your solo ride...",
+      title: "Ride Confirmed!",
+      description: "Your driver is on the way",
     });
   };
 
@@ -132,6 +149,34 @@ export default function BookRide() {
     ) : 0;
   const estimatedFare = selectedVehicleData ? selectedVehicleData.price + (estimatedDistance * 10) : 0;
   const estimatedTime = Math.round(estimatedDistance * 2.5);
+
+  // Show ride matching when booking
+  if (isBooking && pickupLocation && dropoffLocation) {
+    return (
+      <div className="min-h-screen p-6 lg:p-8 space-y-6">
+        <div className="flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={handleCancelBooking}>
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold font-display text-foreground">Finding Your Ride</h1>
+            <p className="text-muted-foreground mt-1">
+              {sharingEnabled ? "Looking for drivers and co-passengers" : "Looking for available drivers"}
+            </p>
+          </div>
+        </div>
+
+        <RideMatching
+          pickupLocation={pickupLocation}
+          dropoffLocation={dropoffLocation}
+          sharingEnabled={sharingEnabled}
+          vehicleType={selectedVehicle}
+          onCancel={handleCancelBooking}
+          onRideConfirmed={handleRideConfirmed}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-6 lg:p-8 space-y-6">
@@ -170,7 +215,7 @@ export default function BookRide() {
                   value={pickupInput}
                   onChange={(e) => setPickupInput(e.target.value)}
                   className="pl-10 pr-28 h-14 text-base bg-secondary/50 border-0"
-                  placeholder="Pickup location"
+                  placeholder="Click 'Map' to select pickup location"
                   readOnly
                 />
                 <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
@@ -179,6 +224,7 @@ export default function BookRide() {
                     size="sm" 
                     onClick={getCurrentLocation}
                     className="text-primary"
+                    title="Use current location"
                   >
                     <Navigation className="h-4 w-4" />
                   </Button>
@@ -186,7 +232,7 @@ export default function BookRide() {
                     variant={selectMode === "pickup" ? "default" : "ghost"}
                     size="sm" 
                     onClick={() => setSelectMode(selectMode === "pickup" ? null : "pickup")}
-                    className={selectMode === "pickup" ? "gradient-primary" : "text-primary"}
+                    className={selectMode === "pickup" ? "gradient-primary text-primary-foreground" : "text-primary"}
                   >
                     <Crosshair className="h-4 w-4 mr-1" />
                     Map
@@ -206,14 +252,14 @@ export default function BookRide() {
                   value={dropoffInput}
                   onChange={(e) => setDropoffInput(e.target.value)}
                   className="pl-10 pr-20 h-14 text-base bg-secondary/50 border-0"
-                  placeholder="Where to?"
+                  placeholder="Click 'Map' to select drop-off"
                   readOnly
                 />
                 <Button 
                   variant={selectMode === "dropoff" ? "default" : "ghost"}
                   size="sm" 
                   onClick={() => setSelectMode(selectMode === "dropoff" ? null : "dropoff")}
-                  className={`absolute right-2 top-1/2 -translate-y-1/2 ${selectMode === "dropoff" ? "gradient-primary" : "text-accent"}`}
+                  className={`absolute right-2 top-1/2 -translate-y-1/2 ${selectMode === "dropoff" ? "bg-accent text-accent-foreground" : "text-accent"}`}
                 >
                   <Crosshair className="h-4 w-4 mr-1" />
                   Map
