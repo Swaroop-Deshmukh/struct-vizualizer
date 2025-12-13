@@ -2,97 +2,112 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Sharka Design System - Premium Ride Sharing App */
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 220 13% 13%;
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 13% 13%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 13% 13%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 142 71% 45%;
+    /* Sharka Brand - Electric Teal */
+    --primary: 174 72% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 220 13% 13%;
+    --secondary: 210 20% 96%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 220 13% 95%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 210 15% 94%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 200 98% 39%;
+    /* Accent - Vibrant Orange for CTAs */
+    --accent: 24 95% 53%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 142 71% 45%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 174 72% 40%;
 
+    /* Status Colors */
     --success: 142 71% 45%;
     --warning: 38 92% 50%;
     --info: 200 98% 39%;
 
-    --radius: 0.5rem;
+    /* Eco/Green Theme */
+    --eco: 150 60% 45%;
+    --eco-foreground: 0 0% 100%;
+
+    /* Sharing Mode */
+    --sharing: 270 70% 60%;
+    --sharing-foreground: 0 0% 100%;
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 220 13% 13%;
-    --sidebar-primary: 142 71% 45%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 174 72% 40%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 96%;
-    --sidebar-accent-foreground: 220 13% 13%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 142 71% 45%;
+    --sidebar-accent: 210 20% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 174 72% 40%;
   }
 
   .dark {
-    --background: 224 15% 10%;
+    --background: 222 47% 6%;
     --foreground: 210 40% 98%;
 
-    --card: 224 15% 12%;
+    --card: 222 47% 9%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 224 15% 12%;
+    --popover: 222 47% 9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 142 71% 45%;
+    --primary: 174 72% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 224 15% 15%;
+    --secondary: 222 47% 12%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 224 15% 15%;
+    --muted: 222 47% 14%;
     --muted-foreground: 215 20% 65%;
 
-    --accent: 200 98% 39%;
+    --accent: 24 95% 53%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 224 15% 18%;
-    --input: 224 15% 18%;
-    --ring: 142 71% 45%;
+    --border: 222 47% 16%;
+    --input: 222 47% 16%;
+    --ring: 174 72% 45%;
 
     --success: 142 71% 45%;
     --warning: 38 92% 50%;
     --info: 200 98% 39%;
 
-    --sidebar-background: 224 15% 12%;
+    --eco: 150 60% 50%;
+    --eco-foreground: 0 0% 100%;
+
+    --sharing: 270 70% 65%;
+    --sharing-foreground: 0 0% 100%;
+
+    --sidebar-background: 222 47% 9%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 142 71% 45%;
+    --sidebar-primary: 174 72% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 224 15% 15%;
+    --sidebar-accent: 222 47% 12%;
     --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 224 15% 18%;
-    --sidebar-ring: 142 71% 45%;
+    --sidebar-border: 222 47% 16%;
+    --sidebar-ring: 174 72% 45%;
   }
 }
 
@@ -102,6 +117,48 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer components {
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(174 72% 30%) 100%);
+  }
+
+  .gradient-accent {
+    background: linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(24 95% 45%) 100%);
+  }
+
+  .gradient-eco {
+    background: linear-gradient(135deg, hsl(var(--eco)) 0%, hsl(150 60% 35%) 100%);
+  }
+
+  .gradient-sharing {
+    background: linear-gradient(135deg, hsl(var(--sharing)) 0%, hsl(var(--primary)) 100%);
+  }
+
+  .glass-card {
+    @apply backdrop-blur-md bg-card/80 border border-border/50;
+  }
+
+  .pulse-eco {
+    animation: pulse-eco 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-eco {
+    0%, 100% {
+      box-shadow: 0 0 0 0 hsl(var(--eco) / 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 12px hsl(var(--eco) / 0);
+    }
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
   }
 }
