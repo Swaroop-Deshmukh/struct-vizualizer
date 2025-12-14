@@ -58,11 +58,14 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isDriver, signOut } = useAuth();
+  const { user, isDriver, isPassenger, signOut } = useAuth();
   const currentPath = location.pathname;
 
   const isActive = (path: string) => currentPath === path;
-  const isDriverMode = currentPath.startsWith("/driver");
+  
+  // Show driver menu if user is a driver AND on driver routes
+  // Show passenger menu if user is a passenger OR on passenger routes
+  const isDriverMode = isDriver && currentPath.startsWith("/driver");
 
   const handleSignOut = async () => {
     await signOut();
@@ -96,7 +99,8 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {!isDriverMode && (
+        {/* Show passenger menu for passengers or when not in driver mode */}
+        {(isPassenger || !isDriverMode) && !isDriverMode && (
           <SidebarGroup>
             <SidebarGroupLabel>Passenger</SidebarGroupLabel>
             <SidebarGroupContent>

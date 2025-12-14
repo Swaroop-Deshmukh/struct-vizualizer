@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -13,7 +12,6 @@ import {
   Users, 
   Clock, 
   Leaf,
-  ChevronRight,
   Minus,
   Plus,
   Wallet,
@@ -24,6 +22,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 import Map from "@/components/Map";
 import RideMatching from "@/components/RideMatching";
+import { LocationSearch } from "@/components/LocationSearch";
 
 const vehicleTypes = [
   { 
@@ -207,62 +206,58 @@ export default function BookRide() {
           {/* Location Input */}
           <Card className="border-0 shadow-card">
             <CardContent className="p-6 space-y-4">
-              <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2">
-                  <div className="h-3 w-3 rounded-full bg-eco" />
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <LocationSearch
+                    value={pickupInput}
+                    onChange={setPickupInput}
+                    onSelect={(location) => handlePickupSelect({ lat: location.lat, lng: location.lng, address: location.address })}
+                    placeholder="Search pickup location..."
+                    icon={<div className="h-3 w-3 rounded-full bg-eco" />}
+                  />
                 </div>
-                <Input 
-                  value={pickupInput}
-                  onChange={(e) => setPickupInput(e.target.value)}
-                  className="pl-10 pr-28 h-14 text-base bg-secondary/50 border-0"
-                  placeholder="Click 'Map' to select pickup location"
-                  readOnly
-                />
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={getCurrentLocation}
-                    className="text-primary"
-                    title="Use current location"
-                  >
-                    <Navigation className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant={selectMode === "pickup" ? "default" : "ghost"}
-                    size="sm" 
-                    onClick={() => setSelectMode(selectMode === "pickup" ? null : "pickup")}
-                    className={selectMode === "pickup" ? "gradient-primary text-primary-foreground" : "text-primary"}
-                  >
-                    <Crosshair className="h-4 w-4 mr-1" />
-                    Map
-                  </Button>
-                </div>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={getCurrentLocation}
+                  className="h-14 w-14 text-primary"
+                  title="Use current location"
+                >
+                  <Navigation className="h-5 w-5" />
+                </Button>
+                <Button 
+                  variant={selectMode === "pickup" ? "default" : "ghost"}
+                  size="icon"
+                  onClick={() => setSelectMode(selectMode === "pickup" ? null : "pickup")}
+                  className={`h-14 w-14 ${selectMode === "pickup" ? "gradient-primary text-primary-foreground" : "text-primary"}`}
+                  title="Select on map"
+                >
+                  <Crosshair className="h-5 w-5" />
+                </Button>
               </div>
               
               <div className="flex items-center gap-2 pl-5">
                 <div className="w-0.5 h-8 bg-border" />
               </div>
               
-              <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2">
-                  <MapPin className="h-4 w-4 text-accent" />
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <LocationSearch
+                    value={dropoffInput}
+                    onChange={setDropoffInput}
+                    onSelect={(location) => handleDropoffSelect({ lat: location.lat, lng: location.lng, address: location.address })}
+                    placeholder="Search drop-off location..."
+                    icon={<MapPin className="h-4 w-4 text-accent" />}
+                  />
                 </div>
-                <Input 
-                  value={dropoffInput}
-                  onChange={(e) => setDropoffInput(e.target.value)}
-                  className="pl-10 pr-20 h-14 text-base bg-secondary/50 border-0"
-                  placeholder="Click 'Map' to select drop-off"
-                  readOnly
-                />
                 <Button 
                   variant={selectMode === "dropoff" ? "default" : "ghost"}
-                  size="sm" 
+                  size="icon"
                   onClick={() => setSelectMode(selectMode === "dropoff" ? null : "dropoff")}
-                  className={`absolute right-2 top-1/2 -translate-y-1/2 ${selectMode === "dropoff" ? "bg-accent text-accent-foreground" : "text-accent"}`}
+                  className={`h-14 w-14 ${selectMode === "dropoff" ? "bg-accent text-accent-foreground" : "text-accent"}`}
+                  title="Select on map"
                 >
-                  <Crosshair className="h-4 w-4 mr-1" />
-                  Map
+                  <Crosshair className="h-5 w-5" />
                 </Button>
               </div>
             </CardContent>
@@ -456,7 +451,7 @@ export default function BookRide() {
                 disabled={!pickupLocation || !dropoffLocation}
               >
                 {sharingEnabled ? "Book Shared Ride" : "Book Solo Ride"}
-                <ChevronRight className="h-5 w-5 ml-2" />
+                <ArrowLeft className="h-5 w-5 ml-2 rotate-180" />
               </Button>
             </CardContent>
           </Card>
