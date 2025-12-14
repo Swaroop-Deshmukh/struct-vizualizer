@@ -99,8 +99,8 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {/* Show passenger menu for passengers or when not in driver mode */}
-        {(isPassenger || !isDriverMode) && !isDriverMode && (
+        {/* Show passenger menu when NOT in driver mode */}
+        {!isDriverMode && (
           <SidebarGroup>
             <SidebarGroupLabel>Passenger</SidebarGroupLabel>
             <SidebarGroupContent>
