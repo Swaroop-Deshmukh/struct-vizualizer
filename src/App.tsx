@@ -12,6 +12,7 @@ import FindShares from "./pages/FindShares";
 import Wallet from "./pages/Wallet";
 import EcoImpact from "./pages/EcoImpact";
 import DriverDashboard from "./pages/DriverDashboard";
+import DriverEarnings from "./pages/DriverEarnings";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -112,7 +113,8 @@ function AppRoutes() {
       
       {/* Driver routes */}
       <Route path="/driver" element={<DriverRoute><Layout><DriverDashboard /></Layout></DriverRoute>} />
-      <Route path="/driver/earnings" element={<DriverRoute><Layout><DriverDashboard /></Layout></DriverRoute>} />
+      <Route path="/driver/earnings" element={<DriverRoute><Layout><DriverEarnings /></Layout></DriverRoute>} />
+      <Route path="/driver/rides" element={<DriverRoute><Layout><DriverDashboard /></Layout></DriverRoute>} />
       <Route path="/driver/rides" element={<DriverRoute><Layout><DriverDashboard /></Layout></DriverRoute>} />
       
       <Route path="*" element={<NotFound />} />
