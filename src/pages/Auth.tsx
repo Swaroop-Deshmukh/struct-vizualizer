@@ -42,23 +42,47 @@ export default function Auth() {
   const [vehiclePlate, setVehiclePlate] = useState("");
   const [vehicleType, setVehicleType] = useState<"hatchback" | "sedan" | "suv">("sedan");
 
-  const handleLogin = async (e: React.FormEvent, role: "passenger" | "driver") => {
+  const handleLogin = async (e: React.FormEvent, expectedRole: "passenger" | "driver") => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: loginEmail,
         password: loginPassword,
       });
 
       if (error) throw error;
 
+      if (!authData.user) throw new Error("Login failed");
+
+      // Check user's actual role from database
+      const { data: roleData, error: roleError } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", authData.user.id);
+
+      if (roleError) throw roleError;
+
+      const userRoles = (roleData || []).map(r => r.role);
+      const hasExpectedRole = userRoles.includes(expectedRole);
+
+      if (!hasExpectedRole) {
+        // Sign out if wrong role
+        await supabase.auth.signOut();
+        toast({
+          title: "Access denied",
+          description: `This account is not registered as a ${expectedRole}. Please use the correct login option.`,
+          variant: "destructive",
+        });
+        return;
+      }
+
       toast({
         title: "Welcome back!",
-        description: `Successfully logged in as ${role}.`,
+        description: `Successfully logged in as ${expectedRole}.`,
       });
-      navigate(role === "driver" ? "/driver" : "/");
+      navigate(expectedRole === "driver" ? "/driver" : "/");
     } catch (error: any) {
       toast({
         title: "Login failed",
