@@ -99,7 +99,7 @@ export default function Auth() {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email: signupEmail,
         password: signupPassword,
         options: {
@@ -113,14 +113,6 @@ export default function Auth() {
       });
 
       if (error) throw error;
-
-      // Add passenger role
-      if (data.user) {
-        await supabase.from("user_roles").insert({
-          user_id: data.user.id,
-          role: "passenger",
-        });
-      }
 
       toast({
         title: "Account created!",
@@ -158,14 +150,8 @@ export default function Auth() {
 
       if (error) throw error;
 
+      // Add vehicle (role is handled by trigger)
       if (data.user) {
-        // Add driver role
-        await supabase.from("user_roles").insert({
-          user_id: data.user.id,
-          role: "driver",
-        });
-
-        // Add vehicle
         await supabase.from("vehicles").insert({
           driver_id: data.user.id,
           make: vehicleMake,
